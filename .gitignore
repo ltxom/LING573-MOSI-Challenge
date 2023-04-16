@@ -1,0 +1,4 @@
+src/data/*
+src/CMU-MultimodalSDK/*
+.idea
+src/.ipynb_checkpoints
