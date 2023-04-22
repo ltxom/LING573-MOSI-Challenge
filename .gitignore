@@ -2,3 +2,7 @@ src/data/*
 src/CMU-MultimodalSDK/*
 .idea
 src/.ipynb_checkpoints
+venv
+venv_condor
+data
+CMU-MultimodalSDK

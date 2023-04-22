@@ -9,6 +9,6 @@ fi
 source ../venv/bin/activate
 
 echo "Cloning the repository for SDK..."
-git clone https://github.com/A2Zadeh/CMU-MultimodalSDK.git
+git clone https://github.com/dearbornlavern/CMU-MultimodalSDK.git
 export PYTHONPATH="$PWD/CMU-MultimodalSDK:$PYTHONPATH"
-pip install notebook
+pip install notebook scikit-learn keras tensorflow matplotlib pandas
