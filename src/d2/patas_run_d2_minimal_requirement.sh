@@ -5,7 +5,7 @@ then
   /dropbox/22-23/575j/env/bin/python -m venv "./venv_condor"
   source ./venv_condor/bin/activate
   echo "Installing packages..."
-  pip install numpy scikit-learn keras tensorflow
+  pip install numpy scikit-learn keras tensorflow pandas matplotlib
 fi
 
 python d2.py
