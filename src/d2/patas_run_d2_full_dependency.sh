@@ -2,7 +2,7 @@
 if [ ! -d "./venv" ]
 then
   echo "Creating virtual environment..."
-  python3 -m venv "./venv"
+  /dropbox/22-23/575j/env/bin/python -m venv "./venv"
   source ./venv/bin/activate
   echo "Installing packages..."
   pip install h5py validators tqdm numpy argparse requests colorama scikit-learn keras tensorflow matplotlib pandas

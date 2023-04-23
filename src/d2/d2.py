@@ -246,18 +246,20 @@ def get_f1(y_real, y_predict):
     true_list, predict_list = get_classification_lists(y_real, y_predict)
     return f1_score(true_list, predict_list, average='weighted')
 
-print("neural network F1: " + str(get_f1(y_dev_refined, y_dev_pred)))
-print("neural network MAE: " + str(get_mae(y_dev_refined, y_dev_pred)))
-print("neural network accuracy (binary): " + str(get_accuracy_2(y_dev_refined, y_dev_pred)))
-print("neural network accuracy (7 class classification): " + str(get_accuracy_7(y_dev_refined, y_dev_pred)))
-print("neural network R^2: " + str(coeff_determination(y_dev_refined, y_dev_pred)))
 
-print()
-print("SVR network F1: " + str(get_f1(y_dev_refined, m.predict(x_dev_ave))))
-print("SVR network MAE: " + str(get_mae(y_dev_refined, m.predict(x_dev_ave))))
-print("SVR network accuracy (binary): " + str(get_accuracy_2(y_dev_refined, m.predict(x_dev_ave))))
-print("SVR network accuracy (7 segments classification): " + str(get_accuracy_7(y_dev_refined, m.predict(x_dev_ave))))
-print('SVR network R^2:', test_score)
+print('Please check results in the \'results\' directory.')
+with open('../../results/d2.txt', 'w') as w:
+    w.write("neural network F1: " + str(get_f1(y_dev_refined, y_dev_pred)) + '\n')
+    w.write("neural network MAE: " + str(get_mae(y_dev_refined, y_dev_pred)) + '\n')
+    w.write("neural network accuracy (binary): " + str(get_accuracy_2(y_dev_refined, y_dev_pred)) + '\n')
+    w.write("neural network accuracy (7 class classification): " + str(get_accuracy_7(y_dev_refined, y_dev_pred)) + '\n')
+    w.write("neural network R^2: " + str(coeff_determination(y_dev_refined, y_dev_pred)) + '\n\n')
+
+    w.write("SVR network F1: " + str(get_f1(y_dev_refined, m.predict(x_dev_ave))) + '\n')
+    w.write("SVR network MAE: " + str(get_mae(y_dev_refined, m.predict(x_dev_ave))) + '\n')
+    w.write("SVR network accuracy (binary): " + str(get_accuracy_2(y_dev_refined, m.predict(x_dev_ave))) + '\n')
+    w.write("SVR network accuracy (7 segments classification): " + str(get_accuracy_7(y_dev_refined, m.predict(x_dev_ave))) + '\n')
+    w.write('SVR network R^2:' + str(test_score))
 
 
 print('Please check visualization outputs in the \'output\' directory.')
