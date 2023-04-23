@@ -8,4 +8,4 @@ chmod u+x run_d2_without_condor.sh
 ```
 This script may take a while to create the virtual environment (especially when installing the tensorflow).
 
-The results of two model will print on the console once it is completed, and four visualizations will be saved under the <code>outputs/</code> directory.
+The code itself should be fast to run since we serialized all time-consuming stuffs into files. Results of two model will be saved into <code>results/d2.txt</code> once it is completed, and four visualizations will be saved under the <code>outputs/</code> directory.
