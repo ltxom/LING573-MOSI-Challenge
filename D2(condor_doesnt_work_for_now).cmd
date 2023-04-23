@@ -1,4 +1,4 @@
-executable = src/d2/run_d2_condor.sh
+executable = src/d2/patas_run_d2_minimal_requirement.sh
 getenv     = true
 error      = d2.error
 log        = d2.log
