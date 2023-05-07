@@ -268,14 +268,14 @@ nn_true_list, nn_predict_list = get_classification_lists(y_dev_refined, y_dev_pr
 confusion_matrix_org = sklearn.metrics.confusion_matrix(nn_true_list, nn_predict_list)
 bal_plt = sklearn.metrics.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_org, display_labels=[True, False])
 bal_plt.plot(cmap=plt.cm.Blues)
-bal_plt.figure_.savefig('../../outputs/neural_network_conf_mat.png')
+bal_plt.figure_.savefig('../../outputs/d2/neural_network_conf_mat.png')
 plt.clf()
 
 svr_true_list, svr_predict_list = get_classification_lists(y_dev_refined, m.predict(x_dev_ave))
 confusion_matrix_org = sklearn.metrics.confusion_matrix(svr_true_list, svr_predict_list)
 bal_plt = sklearn.metrics.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_org, display_labels=[True, False])
 bal_plt.plot(cmap=plt.cm.Blues)
-bal_plt.figure_.savefig('../../outputs/svr_conf_mat.png')
+bal_plt.figure_.savefig('../../outputs/d2/svr_conf_mat.png')
 plt.clf()
 
 fpr_nn, tpr_nn, _ = sklearn.metrics.roc_curve(nn_true_list, nn_predict_list)
@@ -293,7 +293,7 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 plt.legend(loc=4)
-plt.savefig('../../outputs/ROC.png')
+plt.savefig('../../outputs/d2/ROC.png')
 plt.clf()
 
 hist = pd.DataFrame(history_model.history)
@@ -305,5 +305,5 @@ ax.set_xlabel('epochs')
 plt.title('Loss vs. Epochs')
 ax.legend(loc='upper left')
 
-plt.savefig('../../outputs/neural_network_loss.png')
+plt.savefig('../../outputs/d2/neural_network_loss.png')
 

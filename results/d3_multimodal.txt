@@ -1,0 +1,6 @@
+Multimodal neural network F1: 0.7173349507639768
+Multimodal neural network MAE: 1.0802151
+Multimodal neural network accuracy (binary): 0.7099125364431487
+Multimodal neural network accuracy (7 class classification): 0.22157434402332363
+Multimodal neural network R^2: 0.3087013048163697
+

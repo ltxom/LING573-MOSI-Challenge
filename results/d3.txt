@@ -1,0 +1,11 @@
+neural network F1: 0.7568758139891213
+neural network MAE: 1.0878898
+neural network accuracy (binary): 0.74235807860262
+neural network accuracy (7 class classification): 0.21397379912663755
+neural network R^2: 0.3660383664198834
+
+SVR network F1: 0.7287509971200877
+SVR network MAE: 1.5962656736373901
+SVR network accuracy (binary): 0.7074235807860262
+SVR network accuracy (7 segments classification): 0.2052401746724891
+SVR network R^2:0.3885795938892239
