@@ -1,11 +1,12 @@
+
+SVR F1: 0.7287509971200877
+SVR MAE: 1.5962656736373901
+SVR accuracy (binary): 0.7074235807860262
+SVR accuracy (7 segments classification): 0.2052401746724891
+SVR R^2:0.3885795938892239
+
 neural network F1: 0.7562486020350928
 neural network MAE: 1.0242314
 neural network accuracy (binary): 0.7379912663755459
 neural network accuracy (7 class classification): 0.2096069868995633
 neural network R^2: 0.4340289745399759
-
-SVR network F1: 0.7287509971200877
-SVR network MAE: 1.5962656736373901
-SVR network accuracy (binary): 0.7074235807860262
-SVR network accuracy (7 segments classification): 0.2052401746724891
-SVR network R^2:0.3885795938892239
