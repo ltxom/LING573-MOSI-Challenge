@@ -1,18 +1,11 @@
+neural network F1: 0.7568758139891213
+neural network MAE: 1.0878898
+neural network accuracy (binary): 0.74235807860262
+neural network accuracy (7 class classification): 0.21397379912663755
+neural network R^2: 0.3660383664198834
 
-SVR F1: 0.7287509971200877
-SVR MAE: 1.5962656736373901
-SVR accuracy (binary): 0.7074235807860262
-SVR accuracy (7 segments classification): 0.2052401746724891
-SVR R^2:0.3885795938892239
-
-LSTM network F1: 0.7568758139891213
-LSTM network MAE: 1.0878898
-LSTM network accuracy (binary): 0.74235807860262
-LSTM network accuracy (7 class classification): 0.21397379912663755
-LSTM network R^2: 0.3660383664198834
-
-Multimodal neural network F1: 0.7173349507639768
-Multimodal neural network MAE: 1.0802151
-Multimodal neural network accuracy (binary): 0.7099125364431487
-Multimodal neural network accuracy (7 class classification): 0.22157434402332363
-Multimodal neural network R^2: 0.3087013048163697
+SVR network F1: 0.7287509971200877
+SVR network MAE: 1.5962656736373901
+SVR network accuracy (binary): 0.7074235807860262
+SVR network accuracy (7 segments classification): 0.2052401746724891
+SVR network R^2:0.3885795938892239
