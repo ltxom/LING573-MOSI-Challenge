@@ -138,7 +138,7 @@ val_score = m.score(x_val_ave, y_val_refined)
 test_score = m.score(x_dev_ave, y_dev_refined)
 
 print('Please check results in the \'results\' directory.')
-with open('../../results/d3.txt', 'w') as w:
+with open('../../results/D3_scores.out', 'w') as w:
     w.write("neural network F1: " + str(get_f1(y_dev_refined, y_dev_pred)) + '\n')
     w.write("neural network MAE: " + str(get_mae(y_dev_refined, y_dev_pred)) + '\n')
     w.write("neural network accuracy (binary): " + str(get_accuracy_2(y_dev_refined, y_dev_pred)) + '\n')
