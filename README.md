@@ -1,4 +1,4 @@
-# ATM: Alchemist Transformers-based Multi-modal Sentiment Analysis
+# Sentimetalchemy (STM): A Multi-modal Approach to Sentiment Analysis
 ## Deliverable 3 Note for Gina & Haotian
 There are still some problems of the condor on Patas. For some reasons, it cannot activate the virtual environment, so it probably needs to run without the condor_submit command. Here's how we run our project (D3) on Patas.
 
