@@ -1,0 +1,11 @@
+Sentiment SVR Model F1: 0.7740557852700166
+Sentiment SVR Model MAE: 0.6953088641166687
+Sentiment SVR Model accuracy (binary): 0.6251342642320086
+Sentiment SVR Model accuracy (7 class classification): 0.40150375939849625
+Sentiment SVR Model R^2: 0.349492960072032
+
+Sentiment Multimodal Model F1: 0.7892635268308239
+Sentiment Multimodal Model MAE: 0.6791861
+Sentiment Multimodal Model accuracy (binary): 0.6283566058002148
+Sentiment Multimodal Model accuracy (7 class classification): 0.4448979591836735
+Sentiment Multimodal Model R^2: 0.35408226622728345

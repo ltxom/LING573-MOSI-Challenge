@@ -1,0 +1,6 @@
+Emotion Model Baseline: 0.6247323340471093
+Emotion SVR Model ACC: 0.6311563169164882
+Model emotion_text_best accuracy: 0.6295503211991434
+Model emotion_acoustic_best accuracy: 0.6236616702355461
+Model emotion_visual_best accuracy: 0.6247323340471093
+Model emotion_multimodal_best accuracy: 0.6349036402569593
