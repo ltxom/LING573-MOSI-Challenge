@@ -3,12 +3,50 @@ import sys
 import numpy as np
 import numpy as np
 import tensorflow as tf
+from keras.utils.np_utils import to_categorical
 from sklearn.metrics import f1_score
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.svm import SVR
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Dense, Concatenate, Dot, Activation
 from tensorflow.keras.models import load_model
 from keras import backend as K
+
+
+def shrink_emotion_data():
+    with open('pre-processed-data/sentiment/avg_train_X.data', 'rb') as w:
+        train_X = pickle.load(w)
+    with open('pre-processed-data/emotion/train_y.data', 'rb') as w:
+        train_y = pickle.load(w)
+    class_dict = {}
+    for i in range(len(train_y)):
+        max_indices = np.argmax(train_y[i])
+        if max_indices not in class_dict:
+            class_dict[max_indices] = 0
+        class_dict[max_indices] += 1
+    index = 0
+    new_train_X = []
+    new_train_y = []
+    counter = 0
+    while index < len(train_y):
+        max_indices = np.where(train_y[index] == np.max(train_y[index]))[0]
+        if len(max_indices) == 1 and max_indices[0] == 0 and counter < 8000:
+            counter += 1
+        else:
+            new_train_X.append(train_X[index])
+            new_train_y.append(train_y[index])
+        index += 1
+    new_class_dict = {}
+    for i in range(len(new_train_y)):
+        max_indices = np.argmax(new_train_y[i])
+        if max_indices not in new_class_dict:
+            new_class_dict[max_indices] = 0
+        new_class_dict[max_indices] += 1
+
+    with open('pre-processed-data/emotion/shrink_train_x.data', 'wb') as w:
+        pickle.dump(new_train_X, w)
+    with open('pre-processed-data/emotion/shrink_train_y.data', 'wb') as w:
+        pickle.dump(new_train_y, w)
 
 
 def save_emotion_labels():
@@ -178,6 +216,19 @@ def train_SVR():
         pickle.dump(m, f)
 
 
+def train_SVR_emotion():
+    with open('pre-processed-data/sentiment/avg_train_X.data', 'rb') as w:
+        train_X = pickle.load(w)
+    with open('pre-processed-data/emotion/train_y.data', 'rb') as w:
+        train_y = pickle.load(w)
+    text = np.array([x[0].reshape((300,)) for x in train_X])
+    y = [np.argmax(x, axis=0) / 5 + 0.0001 for x in train_y]
+    m = SVR(kernel='rbf', verbose=1)
+    m.fit(text, y)
+    with open('trained_model/SVR_emotion.pkl', 'wb') as f:
+        pickle.dump(m, f)
+
+
 def train_sentiment_model():
     with open('pre-processed-data/sentiment/avg_train_X.data', 'rb') as w:
         train_X = pickle.load(w)
@@ -264,6 +315,18 @@ def train_sentiment_model():
     train_model([text, acoustic, visual], np.array(train_y), [text_dev, acoustic_dev, visual_dev], np.array(dev_y))
 
 
+def to_one_hot(y):
+    result = []
+    for a in y:
+        t = np.zeros((6,))
+        for max_index in np.where(a == np.max(a))[0]:
+            if a[max_index] == 0:
+                break
+            t[max_index] = 1
+        result.append(t)
+    return result
+
+
 def train_emotion_model():
     with open('pre-processed-data/sentiment/avg_train_X.data', 'rb') as w:
         train_X = pickle.load(w)
@@ -274,8 +337,8 @@ def train_emotion_model():
     with open('pre-processed-data/emotion/dev_y.data', 'rb') as w:
         dev_y = pickle.load(w)
 
-    train_y = [x / 3 for x in train_y]
-    dev_y = [x / 3 for x in dev_y]
+    train_y = to_one_hot(train_y)
+    dev_y = to_one_hot(dev_y)
 
     def multimodal_emotion_model(text_shape, acoustic_shape, visual_shape):
         text_input = Input(shape=text_shape, name='text_input')
@@ -298,16 +361,15 @@ def train_emotion_model():
 
         multimodal_features = Concatenate()([attended_text, attended_acoustic, attended_visual])
 
-        dense1 = Dense(256, activation='relu')(multimodal_features)
+        dense1 = Dense(256, activation='relu')(text_lstm)
         dense2 = Dense(128, activation='relu')(dense1)
         output = Dense(6, activation='tanh')(dense2)
-        normalized_output = tf.keras.layers.Lambda(lambda x: x[:, 0:1, :])(output)
-
-        model = Model(inputs=[text_input, acoustic_input, visual_input], outputs=normalized_output)
+        normalized_output = tf.keras.layers.Lambda(lambda x: x[:, 1:2, :])(output)
+        model = Model(inputs=[text_input, acoustic_input, visual_input], outputs=output)
         return model
 
     # Train the model
-    def train_model(train_X, train_y, dev_X, dev_y, batch_size=128, epochs=20):
+    def train_model(train_X, train_y, dev_X, dev_y, batch_size=128, epochs=10):
         text_shape = (train_X[0][0].shape[0], train_X[0][0].shape[1],)
         acoustic_shape = (train_X[0][0].shape[0], train_X[1][0].shape[1],)
         visual_shape = (train_X[0][0].shape[0], train_X[2][0].shape[1],)
@@ -426,9 +488,11 @@ def evaluation(model_path, test_X, test_y):
         "Attention Model accuracy (7 class classification): " + str(get_accuracy_7(test_y, pred_y)))
     print("Attention Model R^2: " + str(coeff_determination(test_y, pred_y)))
 
+
 def acc_emo(real, predict):
     _, predict_list = get_emo_classification_lists(real, predict)
     return np.sum(predict_list) / len(real)
+
 
 def get_emo_classification_lists(real, predict):
     true_list = []
@@ -436,7 +500,7 @@ def get_emo_classification_lists(real, predict):
     prediction_index = np.argmax(predict, axis=1)
     for i in range(len(real)):
         max_v = np.max(real[i])
-        real_indices = np.where(real[i]==max_v)[0]
+        real_indices = np.where(real[i] == max_v)[0]
         if prediction_index[i] in real_indices:
             true_list.append(1)
             predict_list.append(1)
@@ -444,6 +508,7 @@ def get_emo_classification_lists(real, predict):
             true_list.append(1)
             predict_list.append(0)
     return true_list, predict_list
+
 
 def evaluation_emotion(model_path, test_X, test_y):
     text_dev = np.array([x[0] for x in test_X])
@@ -454,9 +519,15 @@ def evaluation_emotion(model_path, test_X, test_y):
     pred_y = []
     for i in range(len(test_y)):
         pred_y.append(prediction[i][0][:])
-    pred_y = np.asarray(pred_y)
-    test_y = np.asarray(test_y)
+    pred_y = np.asarray(pred_y) * 5
+    test_y = [np.argmax(x) for x in test_y]
+    # tp = 0
+    # for i in range(len(pred_y)):
+    #     if int(test_y[i]) == int(pred_y[i]):
+    #         tp += 1
+    # print(tp / len(pred_y))
     print("Attention Model Emotion Accuracy: " + str(acc_emo(test_y, pred_y)))
+
 
 def evaluate_SVR():
     with open('pre-processed-data/sentiment/avg_test_X.data', 'rb') as w:
@@ -478,6 +549,31 @@ def evaluate_SVR():
         print("SVR R^2: " + str(coeff_determination(test_y, pred_y)))
 
 
+def evaluate_SVR_emotion():
+    with open('pre-processed-data/sentiment/avg_test_X.data', 'rb') as w:
+        test_X = pickle.load(w)
+    with open('pre-processed-data/emotion/test_y.data', 'rb') as w:
+        test_y = pickle.load(w)
+
+    text = np.array([x[0].reshape((300,)) for x in test_X])
+    with open('trained_model/SVR_emotion.pkl', 'rb') as f:
+        model = pickle.load(f)
+        pred_y = model.predict(text)
+        pred_y = np.floor(np.asarray(pred_y) * 5)
+        test_y = np.asarray(test_y)
+        tp = 0
+        zero_cnt = 0
+        for i in range(len(test_y)):
+            max_v = np.max(test_y[i])
+            real_indices = np.where(test_y[i] == max_v)[0]
+            if pred_y[i] in real_indices:
+                tp += 1
+            if 0 in real_indices:
+                zero_cnt += 1
+        print('Baseline: ' + str(zero_cnt / len(pred_y)))
+        print('SVR ACC: ' + str(tp / len(pred_y)))
+
+
 def evaluate_multimodal_sentiment():
     with open('pre-processed-data/sentiment/avg_test_X.data', 'rb') as w:
         test_X = pickle.load(w)
@@ -486,24 +582,31 @@ def evaluate_multimodal_sentiment():
     for i in range(19, 20):
         print('Epoch ' + str(i))
         evaluation('trained_model/model_E' + str(i) + '.h5', test_X, test_y)
+
+
 def evaluate_multimodal_emotion():
     with open('pre-processed-data/sentiment/avg_test_X.data', 'rb') as w:
         test_X = pickle.load(w)
     with open('pre-processed-data/emotion/test_y.data', 'rb') as w:
         test_y = pickle.load(w)
-    for i in range(0, 6):
+    for i in range(0, 7):
         print('Epoch ' + str(i))
         evaluation_emotion('trained_model/model_emotion_E' + str(i) + '.h5', test_X, test_y)
+
 
 # save_emotion_labels()
 # save_ave_data()
 # save_sentiment_labels()
 # save_sentiment_labels()
+# shrink_emotion_data()
+
 # train_sentiment_model()
 # train_emotion_model()
 
+# train_SVR()
+# train_SVR_emotion()
+
+evaluate_SVR_emotion()
 # evaluate_SVR()
 # evaluate_multimodal_sentiment()
-evaluate_multimodal_emotion()
-
-# train_SVR()
+# evaluate_multimodal_emotion()
